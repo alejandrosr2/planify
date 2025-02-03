@@ -2,10 +2,9 @@ import { Link } from "react-router-dom"
 
 const menuList = [
     { name: "Resumen", href: "/" },
-    { name: "Calendar", href: "/calendar" },
+    { name: "Calendario", href: "/calendario" },
     { name: "Actividades", href: "/actividades" },
-    { name: "Resumen", href: "/a" },
-    { name: "Resumen", href: "/b" },
+    { name: "Compromisos", href: "/compromisos" },
 ]
 
 const SideMenu = () => {

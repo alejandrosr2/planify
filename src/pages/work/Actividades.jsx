@@ -18,6 +18,16 @@ const Actividades = () => {
                 ],
                 status: "Sin empezar"
             },
+            {
+                id: 1,
+                task: "Examen de economía",
+                steps: [
+                    { id: 1, text: "Estudiar tema 1", status: "Terminado" },
+                    { id: 2, text: "Revisar tema 2", status: "En proceso" },
+                    { id: 3, text: "Hacer ejercicios", status: "Sin empezar" }
+                ],
+                status: "Sin empezar"
+            },
         ];
 });
 
@@ -89,7 +99,7 @@ const Actividades = () => {
                 {/* Lista de tareas */}
                 <div className="w-full min-h-full grid col-span-2 gap-2">
                     <div className="basic-card flex flex-col p-4 max-h-[330px] min-h-[330px]">
-                        <div className="flex justify-between w-full  pb-4">
+                        <div className="flex justify-between w-full pb-4">
                             <h2 className="text-xl font-semibold">Trabajo por hacer</h2>
                             <button onClick={handleAddActivity} className="text-lg font-bold hover:text-hoverColor duration-200"><MdAddCircle /></button>
                         </div>
@@ -148,7 +158,7 @@ const Actividades = () => {
                                 </ul>
                             </div>
                         ) : (
-                            <p>Selecciona una tarea para ver los detalles.</p>
+                            <p className="p-4">Selecciona una tarea para ver los detalles.</p>
                         )}
                     </div>
                 </div>
