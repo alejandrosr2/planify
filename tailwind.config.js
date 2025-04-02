@@ -8,6 +8,7 @@ export default {
     extend: {
       colors: {
         bgColor: "#19191D",
+        bgHeader: "#202024",
         borderColor: "#4A4A4C",
         hoverColor: "#414146",
         red: "#8B3046",

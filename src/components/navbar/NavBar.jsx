@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { MdLogout } from "react-icons/md";
+import { MdLogout, MdMenu } from "react-icons/md";
 
-const NavBar = ({ selectedAccount, onAccountChange }) => {
+const NavBar = ({ selectedAccount, onAccountChange, toggleMenu }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -18,13 +18,15 @@ const NavBar = ({ selectedAccount, onAccountChange }) => {
 
   return (
     <div className="relative z-10 border-b border-b-borderColor bg-bgColor">
-      <div className="flex">
-        <div className="p-4 min-w-[80%]">
-          <p>
-            app / {selectedAccount} / {getPageName()}
-          </p>
-        </div>
-        <div className="p-4 border-l border-l-borderColor w-full flex justify-between items-center">
+      <div className="flex items-center justify-between p-4">
+        {/* Menú hamburguesa en móviles */}
+        <button className="lg:hidden" onClick={toggleMenu}>
+          <MdMenu className="text-2xl" />
+        </button>
+        <p className="hidden lg:block">
+          <span className=" font-bold">Planify</span> / {selectedAccount} / {getPageName()}
+        </p>
+        <div className="flex items-center gap-4">
           <select
             value={selectedAccount}
             onChange={(e) => onAccountChange(e.target.value)}
@@ -33,11 +35,8 @@ const NavBar = ({ selectedAccount, onAccountChange }) => {
             <option value="Cuenta Ejemplo">Cuenta Ejemplo</option>
             <option value="Cuenta de Prueba">Cuenta de Prueba</option>
           </select>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 hover:text-hoverColor duration-200"
-          >
-            Log out<MdLogout />
+          <button onClick={handleLogout} className="flex items-center gap-2 hover:text-hoverColor duration-200">
+            Log out <MdLogout />
           </button>
         </div>
       </div>

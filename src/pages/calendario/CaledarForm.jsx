@@ -5,7 +5,7 @@ const CalendarForm = ({ initialDay, initialHour, onClose, onSave }) => {
     const [taskName, setTaskName] = useState('');
     const [selectedDays, setSelectedDays] = useState([initialDay]);
     const [selectedHours, setSelectedHours] = useState([initialHour]);
-    const [selectedColor, setSelectedColor] = useState('red'); // Color seleccionado
+    const [selectedColor, setSelectedColor] = useState('red'); 
 
     const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     const hours = Array.from({ length: 16 }, (_, i) => `${i + 7}:00`);
@@ -25,9 +25,9 @@ const CalendarForm = ({ initialDay, initialHour, onClose, onSave }) => {
     const handleSubmit = () => {
         if (taskName.trim() === '') return alert('Task name is required');
         
-        const task = { taskName, selectedDays, selectedHours, selectedColor }; // Incluimos el color
+        const task = { taskName, selectedDays, selectedHours, selectedColor };
         onSave(task);
-        onClose(); // Cerrar el formulario después de guardar
+        onClose();
     };
 
     return (

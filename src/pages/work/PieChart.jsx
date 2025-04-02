@@ -1,10 +1,10 @@
 
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 
-const COLORS = ["#4ade80", "#facc15", "#f87171"]; // Colores: verde, amarillo, rojo
+const COLORS = ["#4ade80", "#facc15", "#f87171"];
 
 const ActivityPieChart = ({ steps }) => {
-    // Procesar datos para el gráfico
+    
     const data = [
         { name: "Completadas", value: steps.filter(step => step.status === "Terminado").length },
         { name: "En proceso", value: steps.filter(step => step.status === "En proceso").length },
@@ -20,7 +20,7 @@ const ActivityPieChart = ({ steps }) => {
                         cx="50%"
                         cy="50%"
                         outerRadius={150}
-                        label
+                        
                         dataKey="value"
                     >
                         {data.map((entry, index) => (

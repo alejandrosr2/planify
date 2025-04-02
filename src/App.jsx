@@ -10,18 +10,22 @@ import Actividades from "./pages/work/Actividades";
 import Login from "./pages/login/Login";
 import ProtectedRoute from "./components/protected/ProtectedRoute";
 import useAccountData from "./hooks/useAccountData";
+import Commitments from "./pages/commitments/Commitments";
 
 function App() {
   const location = useLocation();
   const isLoginRoute = location.pathname === "/login";
-  // Estado para la cuenta seleccionada
+
   const [currentAccount, setCurrentAccount] = useState(() => {
     const storedAccount = localStorage.getItem("selectedAccount") || "Cuenta Ejemplo";
     return storedAccount;
   });
-  // Usa el custom hook para manejar los datos
+
   const [accountData, setAccountData] = useAccountData(currentAccount);
-  // Guardar selección de cuenta
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
   useEffect(() => {
     localStorage.setItem("selectedAccount", currentAccount);
   }, [currentAccount]);
@@ -30,40 +34,17 @@ function App() {
     <>
       {!isLoginRoute && (
         <>
-          <NavBar 
-            selectedAccount={currentAccount} 
-            onAccountChange={setCurrentAccount} 
-          />
-          <SideMenu />
-          <main className="ml-44">
+          <NavBar selectedAccount={currentAccount} onAccountChange={setCurrentAccount} toggleMenu={toggleMenu} />
+          <SideMenu isOpen={isMenuOpen} toggleMenu={toggleMenu} />
+          <main className="lg:ml-44">
             <BgPages />
             <div className="mx-auto max-w-screen-xl pt-14">
               <Routes>
                 <Route element={<ProtectedRoute />}>
-                  <Route 
-                    path="/" 
-                    element={
-                      <Resumen 
-                        accountData={accountData}
-                        setAccountData={setAccountData}
-                      />} 
-                  />
-                  <Route 
-                    path="/calendario" 
-                    element={
-                      <Calendar 
-                        accountData={accountData}
-                        setAccountData={setAccountData}
-                      />} 
-                  />
-                  <Route 
-                    path="/actividades" 
-                    element={
-                      <Actividades 
-                        accountData={accountData}
-                        setAccountData={setAccountData}
-                      />} 
-                  />
+                  <Route path="/" element={<Resumen accountData={accountData} setAccountData={setAccountData} />} />
+                  <Route path="/calendario" element={<Calendar accountData={accountData} setAccountData={setAccountData} />} />
+                  <Route path="/actividades" element={<Actividades accountData={accountData} setAccountData={setAccountData} />} />
+                  <Route path="/compromisos" element={<Commitments accountData={accountData} setAccountData={setAccountData} />} />
                 </Route>
               </Routes>
             </div>

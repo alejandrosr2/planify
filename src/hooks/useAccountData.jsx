@@ -7,6 +7,7 @@ const useAccountData = (accountName) => {
     calendar: {},
     activities: [],
     settings: {},
+    commitments: [],
   };
 
   if (accountName === "Cuenta Ejemplo") {
@@ -27,32 +28,56 @@ const useAccountData = (accountName) => {
         };
       }
     });
+    defaultData.activities = [
+      {
+        id: 1,
+        task: "Examen de economía",
+        steps: [
+          { id: 1, text: "Estudiar tema 1", status: "Terminado" },
+          { id: 2, text: "Revisar tema 2", status: "En proceso" },
+          { id: 3, text: "Hacer ejercicios", status: "Sin empezar" }
+        ],
+        status: "Sin empezar"
+      }
+    ];
+    defaultData.commitments = [
+      {
+        id: 1,
+        title: "Cita Médica",
+        description: "Chequeo general",
+        date: "2025-02-06",
+        hour: "10:00",
+        color: "red",
+      },
+      {
+        id: 2,
+        title: "Entrevista de Trabajo",
+        description: "Entrevista con la empresa XYZ",
+        date: "2025-02-07",
+        hour: "15:00",
+        color: "green",
+      },
+    ]
   }
 
-  // Estado de carga para evitar sobrescritura de datos
   const [isLoaded, setIsLoaded] = useState(false);
   const [accountData, setAccountData] = useState(defaultData);
 
-  // Cargar datos correctos al cambiar de cuenta
   useEffect(() => {
     const savedData = localStorage.getItem(storageKey);
     if (savedData) {
-      console.log("📂 Datos recuperados de localStorage:", JSON.parse(savedData));
       setAccountData(JSON.parse(savedData));
     } else {
-      console.log("🆕 No hay datos guardados. Usando valores predeterminados.");
       setAccountData(defaultData);
     }
-    setIsLoaded(true); // Solo después de cargar los datos, permitimos guardarlos
-  }, [accountName]); // Se ejecuta solo cuando cambia de cuenta
+    setIsLoaded(true); 
+  }, [accountName]); 
 
-  // Guardar en localStorage solo si ya se cargaron los datos correctos
   useEffect(() => {
     if (isLoaded) {
       localStorage.setItem(storageKey, JSON.stringify(accountData));
     }
-  }, [accountData, storageKey, isLoaded]); // Solo guarda si ya cargó los datos correctos
-
+  }, [accountData, storageKey, isLoaded]); 
   return [accountData, setAccountData];
 };
 

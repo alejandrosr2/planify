@@ -5,7 +5,6 @@ const Calendar = ({ accountData, setAccountData }) => {
   const hours = Array.from({ length: 16 }, (_, i) => `${i + 7}:00`);
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   
-  // Datos del calendario desde la cuenta actual
   const calendarData = accountData.calendar || {};
 
   const saveTask = (task) => {
@@ -18,8 +17,6 @@ const Calendar = ({ accountData, setAccountData }) => {
         newCalendarData[key] = { taskName, color: selectedColor };
       });
     });
-
-    // Actualizar solo la parte del calendario
     setAccountData(prev => ({
       ...prev,
       calendar: newCalendarData
@@ -40,8 +37,8 @@ const Calendar = ({ accountData, setAccountData }) => {
 
   return (
     <div>
-      <h1 className="mb-10">Calendario - {accountData.accountName}</h1>
-      <div className="overflow-auto border border-borderColor bg-borderColor rounded-lg p-[2px]">
+      <h1 className="mb-10 p-1">Calendario - {accountData.accountName}</h1>
+      <div className="overflow-auto  border-borderColor bg-borderColor rounded-lg p-[2px]">
         <table className="table-auto border-collapse w-full bg-bgColor z-50">
           <thead>
             <tr className="border-b border-b-borderColor">

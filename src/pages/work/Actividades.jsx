@@ -1,118 +1,106 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MdAddCircle } from "react-icons/md";
 import ActivityPieChart from "./PieChart";
 
-const Actividades = () => {
-    const [toDo, setToDo] = useState(() => {
-        const savedToDo = localStorage.getItem("toDo");
-        return savedToDo
-        ? JSON.parse(savedToDo)
-        : [
-            {
-                id: 1,
-                task: "Examen de economía",
-                steps: [
-                    { id: 1, text: "Estudiar tema 1", status: "Terminado" },
-                    { id: 2, text: "Revisar tema 2", status: "En proceso" },
-                    { id: 3, text: "Hacer ejercicios", status: "Sin empezar" }
-                ],
-                status: "Sin empezar"
-            },
-            {
-                id: 1,
-                task: "Examen de economía",
-                steps: [
-                    { id: 1, text: "Estudiar tema 1", status: "Terminado" },
-                    { id: 2, text: "Revisar tema 2", status: "En proceso" },
-                    { id: 3, text: "Hacer ejercicios", status: "Sin empezar" }
-                ],
-                status: "Sin empezar"
-            },
-        ];
-});
+const Actividades = ({ accountData, setAccountData }) => {
+    const activities = accountData.activities || [];
+    const [selectedTask, setSelectedTask] = useState(null);
 
-    const [selectedTask, setSelectedTask] = useState(null); // Para la tarea seleccionada
+    useEffect(() => {
+        if (selectedTask) {
+            const currentTask = activities.find((t) => t.id === selectedTask.id);
+            setSelectedTask(currentTask || null);
+        } else {
+            setSelectedTask(null);
+        }
+    }, [accountData]);
 
-    // Maneja la adición de una nueva tarea
+    const updateActivities = (newActivities) => {
+        setAccountData((prevData) => ({
+            ...prevData,
+            activities: newActivities,
+        }));
+    };
+
     const handleAddActivity = () => {
         const newTask = prompt("Introduce una nueva tarea:");
         if (newTask) {
             const newToDo = [
-                ...toDo,
-                { id: toDo.length + 1, task: newTask, steps: [], status: "Sin empezar" }
+                ...activities,
+                { id: Date.now(), task: newTask, steps: [], status: "Sin empezar" },
             ];
-            setToDo(newToDo);
-            localStorage.setItem("toDo", JSON.stringify(newToDo));
+            updateActivities(newToDo);
         }
     };
 
-    // Maneja la eliminación de una tarea
     const handleDeleteActivity = (id) => {
-        const newToDo = toDo.filter(task => task.id !== id);
-        setToDo(newToDo);
-        localStorage.setItem("toDo", JSON.stringify(newToDo));
-        if (selectedTask?.id === id) setSelectedTask(null); // Si la tarea eliminada es la seleccionada, resetea
+        const newToDo = activities.filter((task) => task.id !== id);
+        updateActivities(newToDo);
+        if (selectedTask?.id === id) setSelectedTask(null);
     };
 
-    // Maneja la selección de una tarea
     const handleSelectTask = (task) => {
         setSelectedTask(task);
     };
 
-    // Maneja la adición de pasos a la tarea seleccionada
     const handleAddStep = () => {
         const newStep = prompt("Introduce un nuevo paso:");
         if (newStep && selectedTask) {
-            const updatedTask = {
-                ...selectedTask,
-                steps: [...selectedTask.steps, { id: Date.now(), text: newStep, status: "Sin empezar" }]
-            };
-            const updatedToDo = toDo.map(task =>
+            const updatedSteps = [
+                ...selectedTask.steps,
+                { id: Date.now(), text: newStep, status: "Sin empezar" }
+            ];
+
+            const updatedTask = { ...selectedTask, steps: updatedSteps };
+
+            const updatedToDo = activities.map((task) =>
                 task.id === selectedTask.id ? updatedTask : task
             );
-            setToDo(updatedToDo);
-            setSelectedTask(updatedTask); // Actualiza la tarea seleccionada
-            localStorage.setItem("toDo", JSON.stringify(updatedToDo));
+
+            updateActivities(updatedToDo);
         }
     };
 
-    // Maneja el cambio de estado de un paso
     const handleChangeStepStatus = (stepId, newStatus) => {
         if (selectedTask) {
-            const updatedSteps = selectedTask.steps.map(step =>
+            const updatedSteps = selectedTask.steps.map((step) =>
                 step.id === stepId ? { ...step, status: newStatus } : step
             );
+            
             const updatedTask = { ...selectedTask, steps: updatedSteps };
-            const updatedToDo = toDo.map(task =>
+            
+            const updatedToDo = activities.map((task) =>
                 task.id === selectedTask.id ? updatedTask : task
             );
-            setToDo(updatedToDo);
-            setSelectedTask(updatedTask);
-            localStorage.setItem("toDo", JSON.stringify(updatedToDo));
+
+            updateActivities(updatedToDo);
         }
     };
 
     return (
         <div>
-            <h1 className="mb-10">Actividades</h1>
-            <div className="flex gap-4 min-h-[660px]">
+            <h1 className="mb-10 p-1">Actividades</h1>
+            <div className="flex flex-col md:flex-row gap-4 min-h-[660px] p-1">
                 {/* Lista de tareas */}
                 <div className="w-full min-h-full grid col-span-2 gap-2">
+                    {/* Actividades generales */}
                     <div className="basic-card flex flex-col p-4 max-h-[330px] min-h-[330px]">
                         <div className="flex justify-between w-full pb-4">
                             <h2 className="text-xl font-semibold">Trabajo por hacer</h2>
-                            <button onClick={handleAddActivity} className="text-lg font-bold hover:text-hoverColor duration-200"><MdAddCircle /></button>
+                            <button onClick={handleAddActivity} className="text-lg font-bold hover:text-hoverColor duration-200">
+                                <MdAddCircle />
+                            </button>
                         </div>
                         <div>
-                            {toDo.length === 0 ? (
+                            {activities.length === 0 ? (
                                 <p>No hay tareas por hacer.</p>
                             ) : (
                                 <ul>
-                                    {toDo.map(task => (
+                                    {activities.map((task) => (
                                         <li key={task.id} className="flex justify-between gap-4 items-center">
                                             <span
                                                 onClick={() => handleSelectTask(task)}
-                                                className="cursor-pointer w-full hover:bg-hoverColor rounded-lg px-2"
+                                                className="py-1 cursor-pointer w-full hover:bg-hoverColor rounded-lg px-2"
                                             >
                                                 {task.task}
                                             </span>
@@ -128,25 +116,31 @@ const Actividades = () => {
                             )}
                         </div>
                     </div>
-                    <div className="basic-card max-h-[300px] min-h-[330px]">
+                    {/* Pasos de las actividades */}
+                    <div className="basic-card flex flex-col p-4 max-h-[330px] min-h-[330px]">
                         {selectedTask ? (
-                            <div className="p-4">
-                                <h3 className="text-lg font-semibold">
-                                    {selectedTask.task}
-                                </h3>
-                                <button onClick={handleAddStep}>Añadir paso</button>
+                            <div>
+                                <div className="flex justify-between w-full pb-4">
+                                    <h3 className="text-lg font-semibold">{selectedTask.task}</h3>
+                                    <button onClick={handleAddStep} className=" hover:text-hoverColor duration-200 text-lg font-bold"><MdAddCircle /></button>
+                                </div>
                                 <ul>
-                                    {selectedTask.steps.map(step => (
+                                    {selectedTask.steps.map((step) => (
                                         <li key={step.id} className="flex justify-between items-center space-y-1">
-                                            <span className={`rounded-lg w-full px-2 
-                                                ${step.status === "Sin empezar" ? "bg-red" : 
-                                                step.status === "En proceso" ? "bg-yellow" : 
-                                                "bg-green"}`}>{step.text}</span>
+                                            <span
+                                                className={`rounded-lg w-full px-2 ${
+                                                    step.status === "Sin empezar"
+                                                        ? "bg-red"
+                                                        : step.status === "En proceso"
+                                                        ? "bg-yellow"
+                                                        : "bg-green"
+                                                }`}
+                                            >
+                                                {step.text}
+                                            </span>
                                             <select
                                                 value={step.status}
-                                                onChange={e =>
-                                                    handleChangeStepStatus(step.id, e.target.value)
-                                                }
+                                                onChange={(e) => handleChangeStepStatus(step.id, e.target.value)}
                                                 className="ml-2 rounded-lg"
                                             >
                                                 <option value="Sin empezar">Sin empezar</option>
@@ -162,12 +156,13 @@ const Actividades = () => {
                         )}
                     </div>
                 </div>
+                {/* Gráfico */}
                 <div className="basic-card w-full min-h-full flex justify-center items-center">
                     {selectedTask ? (
                         <ActivityPieChart steps={selectedTask.steps} />
-                            ) : (
-                                <p>Selecciona una tarea para ver el gráfico.</p>
-                            )}
+                    ) : (
+                        <p>Selecciona una tarea para ver el gráfico.</p>
+                    )}
                 </div>
             </div>
         </div>

@@ -1,5 +1,4 @@
 
-
 const exampleAccountData = {
     tasks: {},
 };

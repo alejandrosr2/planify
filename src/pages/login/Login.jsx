@@ -5,20 +5,17 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
-      // Manejo de los valores de usuario y contraseña
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    // Hook para redirigir a la página principal
     const navigate = useNavigate();
 
-    // Función para manejar el envío del formulario
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Verificar las credenciales
+        
         if (username === "1234" && password === "1234") {
-            localStorage.setItem("isAuthenticated", "true"); // Guardamos la autenticación
-            navigate("/"); // Redirigimos al home
+            localStorage.setItem("isAuthenticated", "true"); 
+            navigate("/"); 
         } else {
             alert("Credenciales incorrectas.");
         }
@@ -35,7 +32,8 @@ const Login = () => {
                                 type="text" 
                                 className="bg-[#202024] p-1 rounded-lg" 
                                 value={username}
-                                onChange={(e) => setUsername(e.target.value)}    
+                                onChange={(e) => setUsername(e.target.value)}
+                                placeholder="1234"    
                             />
                         </div>
                         <div className="flex flex-col">
@@ -45,6 +43,7 @@ const Login = () => {
                                 className="bg-[#202024] p-1 rounded-lg"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                placeholder="1234"
                             />
                         </div>
                         <div className="flex justify-end">
@@ -55,7 +54,7 @@ const Login = () => {
                     </form>
                 </div>
             </div>
-            <div className="w-full min-h-full flex justify-center items-center bg-green/80">
+            <div className="hidden md:flex w-full min-h-full  justify-center items-center bg-green/80">
                 <img src={logo} className="size-60 drop-shadow-[0_0_5px_hsl(120,50%,00%)]" />
             </div>
         </div>
